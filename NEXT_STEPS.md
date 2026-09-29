@@ -34,16 +34,23 @@ open Tapline.xcodeproj
 - Free Apple ID provisioning profiles expire after 7 days — re-sign (just re-run
   from Xcode) right before recording the demo video.
 
-## 4. Once the HUBU-FIS dataset finishes downloading (background, in progress)
-Tell Claude — it can unzip it, inspect the label CSV, and run `tapbench` itself
-to fill in `bench/summary.md` with real numbers.
+## 4. Benchmark — done
+The HUBU-FIS dataset (234 real videos) downloaded, extracted, and ran through
+`tapbench`. Real numbers are in `bench/summary.md` and already filled into the
+README, `COMPETITION.md`, and the Devpost draft: adaptive detector catches 8.10
+late-trial taps/video vs 2.13 for a fixed-threshold baseline; adding
+amplitude+decrement improves AUC (PD vs control) from 0.58 to 0.68 over rate alone.
+Along the way this also found and fixed two real bugs (CSV parsing silently broke
+on CRLF line endings; a case-mismatch flagged every video as Parkinson's) — see the
+git log.
 
 ## 5. Record the demo video (this genuinely needs you — your hands, your phone)
-Script is in the git history / can be regenerated: open on a real patient clip
-from the dataset (credited, hands only), then a live trial on your iPhone showing
-the shrinking-bars result, then the benchmark number, then the paywall, then one
-refused trial as the honest limit. Hard cap 1:55.
+Script (in `bench/DEVPOST_DRAFT.md` and the plan history): open on a real patient
+clip from the dataset (credited, hands only), then a live trial on your iPhone
+showing the shrinking-bars result, then the benchmark number (now real — see above),
+then the paywall, then one refused trial as the honest limit. Hard cap 1:55.
 
 ## 6. Submit on Devpost
-Draft text is in `bench/DEVPOST_DRAFT.md` — fill in the real benchmark number and
-links, then submit by **12:00 PDT Sep 30** (not 11:45pm — leave a buffer).
+Draft text is in `bench/DEVPOST_DRAFT.md` (already has the real headline number) —
+fill in the remaining links and screenshot, then submit by **12:00 PDT Sep 30**
+(not 11:45pm — leave a buffer).
