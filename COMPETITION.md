@@ -47,11 +47,12 @@ Heartbeat Hero (CPR depth to the millimetre, personal story) and Hearing Buddy (
 ## Claims
 | Claim | Verifiable proof | Built? | Where a judge sees it |
 |---|---|---|---|
-| Tap detection works and doesn't double-count at contact | Synthetic ground-truth unit tests (sine, decay, jitter, double-bounce) | Yes — `Packages/TapCore/Tests` | README test badge/command, repo |
-| Adaptive detector catches late/small taps a fixed-threshold detector misses | Synthetic exact-count test + real-footage late-trial tap count (HUBU-FIS) | Synthetic: yes. Real-footage: pending dataset download | `bench/summary.md`, video 0:50–1:10 |
-| Rate+amplitude+decrement tracks clinician severity better than rate alone | Spearman ρ / AUC ablation on held-out HUBU-FIS videos, pre-declared protocol | Pending dataset download + label column mapping | `bench/summary.md` |
-| Quality gate refuses bad trials with a stated reason | Manual test: palm-on hand, hand-leaves-frame | Built (`QualityGate.swift`); on-device test pending | Video 1:40–1:55 |
-| RevenueCat gates real features, tests stay free | Entitlement check in `PurchaseManager`/`TrialResultView`/`HistoryView`; Test Store purchase completes on-device | Built; on-device verification pending | Video, RevenueCat dashboard |
+| Tap detection works and doesn't double-count at contact | Synthetic ground-truth unit tests (sine, decay, jitter, double-bounce) | **Yes — passing.** Ran standalone (CLT toolchain, since swift-testing's dylib needs real Xcode) against `Packages/TapCore/Tests` scenarios: all pass | README test badge/command, repo |
+| Adaptive detector catches late/small taps a fixed-threshold detector misses | Synthetic exact-count test + real-footage late-trial tap count (HUBU-FIS) | Synthetic: **yes, verified — found and fixed a real bug here** (2.5s window stalled at t=4.7s/10s; 1.2s window now reaches t=8.7s, 26 vs 8 taps caught). Real-footage: pending dataset download | `bench/summary.md`, video 0:50–1:10 |
+| The video decode/timestamp path is correct, not just the math | Real AVAssetWriter→AVAssetReader round trip via `TrialAnalyzer` | **Yes — verified.** 90/90 frames, timestamps within 0.05s, on a real H.264-encoded clip | `Packages/TapCore/Tests/TrialAnalyzerTests.swift` |
+| Rate+amplitude+decrement tracks clinician severity better than rate alone | Spearman ρ / AUC ablation on held-out HUBU-FIS videos, pre-declared protocol | Statistics math (Spearman, AUC, z-score) verified against known values. Pending dataset download + label column mapping for real numbers | `bench/summary.md` |
+| Quality gate refuses bad trials with a stated reason | Synthetic tests (too few taps, mostly-missing hand) pass; manual on-device test (palm-on hand, hand-leaves-frame) pending | Synthetic: yes. On-device: pending | Video 1:40–1:55 |
+| RevenueCat gates real features, tests stay free | Entitlement check in `PurchaseManager`/`TrialResultView`/`HistoryView`; Test Store purchase completes on-device | Code written and API-verified against the SDK source; **iOS build itself still unverified — blocked on the Xcode license** | Video, RevenueCat dashboard |
 
 ## Critical path and limitations
 | Dependency or limitation | Proven live? | Routed around | If not, why |
@@ -61,7 +62,7 @@ Heartbeat Hero (CPR depth to the millimetre, personal story) and Hearing Buddy (
 | HUBU-FIS 10.8GB download | In progress (background) | N/A | Started immediately at kickoff |
 | Dataset label CSV column names unknown until download completes | tapbench auto-detects filename/score/group columns, prints header for manual override | `--filename-col/--score-col/--group-col` CLI flags | N/A |
 | Manual hand-labeling of taps on real clips (original "Number 1" plan) | Not attempted — not automatable without a human watching video frame-by-frame | **Reframed**: Number 1 is now (a) exact-count synthetic ground truth (automatable, done) + (b) automatic late-trial tap-count gap on real footage (no manual labels needed) | Manual video labeling isn't feasible inside the build window without Ashraf's own time; the reframed claim is equally rigorous and fully reproducible |
-| Xcode license not yet accepted on this machine | Blocked — needs Ashraf to run `sudo xcodebuild -license accept` | None — genuinely needs Ashraf | Requires interactive password |
+| Xcode license not yet accepted on this machine | Blocked — needs Ashraf to run `sudo xcodebuild -license accept`. **The iOS app target (camera, SwiftUI, RevenueCat) has never actually been compiled** — everything verified so far is macOS-only TapCore/tapbench, worked around via `DEVELOPER_DIR=/Library/Developer/CommandLineTools`, which has no iOS SDK | None — genuinely needs Ashraf | Requires interactive password |
 
 ## Overruled concerns
 (none yet — record here if Ashraf overrides a flagged risk)
