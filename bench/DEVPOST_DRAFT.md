@@ -11,10 +11,11 @@ The finger-tapping test that decides Parkinson's medication, measured on your iP
 
 ## Description
 
-**[HEADLINE NUMBER FROM bench/summary.md GOES HERE — e.g. "On 234 clinician-scored
-Parkinson's videos, Tapline's adaptive tap detector still catches taps a
-fixed-threshold detector misses by the end of the trial: X vs Y taps caught in the
-final third of each trial."]**
+**On 234 real, clinician-scored Parkinson's and control videos, Tapline's adaptive
+tap detector catches 8.1 taps on average in the last third of a trial — the part
+where amplitude decrement actually shows up — versus 2.1 for a fixed-threshold
+detector. Adding amplitude and decrement to tap rate improves separation of
+Parkinson's from control from AUC 0.58 to 0.68 over rate alone.**
 
 Neurologists track Parkinson's disease with a simple test: tap your thumb and index
 finger together, as wide and as fast as you can, for 10 seconds. It's part of the

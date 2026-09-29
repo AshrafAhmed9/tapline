@@ -4,7 +4,7 @@
 > Parkinson's doses are adjusted from a 10-second finger-tapping test scored by eye. Five movement specialists scoring the same videos agree only moderately (ICC 0.74). Tapline measures every tap on an iPhone, and on real Parkinson's videos its adaptive detector catches late, decremented taps a fixed-threshold detector misses.
 - Number it rests on (vs which baseline): late-trial tap-detection gap, adaptive vs a detector calibrated once at the start (fixed-threshold), on real HUBU-FIS footage; plus Spearman ρ / AUC of rate+amplitude+decrement vs rate-only, against clinician UPDRS scores.
 - Who gets hurt without it: a person with Parkinson's whose levodopa timing is set from a 15-minute clinic visit every 3–6 months and what they remember about wearing-off.
-- Still accurate at freeze? _pending — check before submission_
+- Still accurate at freeze? **Yes, confirmed with real numbers on the full 234-video dataset**: adaptive 8.10 vs fixed 2.13 late-trial taps; AUC 0.58→0.68, ρ 0.38→0.47 (rate-only → combined). Recheck once more at final freeze.
 
 ## Facts
 - Competition type: engineering-judged, video-judged hackathon (Devpost).
@@ -48,9 +48,9 @@ Heartbeat Hero (CPR depth to the millimetre, personal story) and Hearing Buddy (
 | Claim | Verifiable proof | Built? | Where a judge sees it |
 |---|---|---|---|
 | Tap detection works and doesn't double-count at contact | Synthetic ground-truth unit tests (sine, decay, jitter, double-bounce) | **Yes — passing.** Ran standalone (CLT toolchain, since swift-testing's dylib needs real Xcode) against `Packages/TapCore/Tests` scenarios: all pass | README test badge/command, repo |
-| Adaptive detector catches late/small taps a fixed-threshold detector misses | Synthetic exact-count test + real-footage late-trial tap count (HUBU-FIS) | Synthetic: **yes, verified — found and fixed a real bug here** (2.5s window stalled at t=4.7s/10s; 1.2s window now reaches t=8.7s, 26 vs 8 taps caught). Real-footage: pending dataset download | `bench/summary.md`, video 0:50–1:10 |
+| Adaptive detector catches late/small taps a fixed-threshold detector misses | Synthetic exact-count test + real-footage late-trial tap count (HUBU-FIS) | **Yes, on all 234 real videos.** Adaptive: 8.10 late-trial taps/video avg. Fixed-threshold: 2.13. (Synthetic test also found and fixed a real bug: 2.5s window stalled at t=4.7s/10s; 1.2s window now reaches t=8.7s.) | `bench/summary.md`, video 0:50–1:10 |
 | The video decode/timestamp path is correct, not just the math | Real AVAssetWriter→AVAssetReader round trip via `TrialAnalyzer` | **Yes — verified.** 90/90 frames, timestamps within 0.05s, on a real H.264-encoded clip | `Packages/TapCore/Tests/TrialAnalyzerTests.swift` |
-| Rate+amplitude+decrement tracks clinician severity better than rate alone | Spearman ρ / AUC ablation on held-out HUBU-FIS videos, pre-declared protocol | Statistics math (Spearman, AUC, z-score) verified against known values. Pending dataset download + label column mapping for real numbers | `bench/summary.md` |
+| Rate+amplitude+decrement tracks clinician severity better than rate alone | Spearman ρ / AUC ablation on held-out (n=140) HUBU-FIS videos, pre-declared protocol | **Yes.** ρ 0.38→0.47, AUC 0.58→0.68 (rate-only → combined). Full dataset run also surfaced and fixed two real bugs: CSV parsing silently failed on CRLF line endings (Swift treats "\r\n" as one grapheme cluster), and the PD/control label had a case-mismatch bug flagging every video as PD | `bench/summary.md` |
 | Quality gate refuses bad trials with a stated reason | Synthetic tests (too few taps, mostly-missing hand) pass; manual on-device test (palm-on hand, hand-leaves-frame) pending | Synthetic: yes. On-device: pending | Video 1:40–1:55 |
 | RevenueCat gates real features, tests stay free | Entitlement check in `PurchaseManager`/`TrialResultView`/`HistoryView`; Test Store purchase completes on-device | Code written and API-verified against the SDK source; **iOS build itself still unverified — blocked on the Xcode license** | Video, RevenueCat dashboard |
 
@@ -59,7 +59,7 @@ Heartbeat Hero (CPR depth to the millimetre, personal story) and Hearing Buddy (
 |---|---|---|---|
 | Free Apple ID (no paid dev account) | Pending — needs a real iPhone sideload | Re-sign before recording the demo (7-day profile) | N/A |
 | Front camera ≥55fps | Pending — code written (`CameraController.configureHighestFrameRate`), needs device test | Falls back to device's max fps if 60 unsupported | N/A |
-| HUBU-FIS 10.8GB download | In progress (background) | N/A | Started immediately at kickoff |
+| HUBU-FIS 10.8GB download | **Done.** Downloaded, extracted (234 videos + labels), full benchmark run once | N/A | N/A |
 | Dataset label CSV column names unknown until download completes | tapbench auto-detects filename/score/group columns, prints header for manual override | `--filename-col/--score-col/--group-col` CLI flags | N/A |
 | Manual hand-labeling of taps on real clips (original "Number 1" plan) | Not attempted — not automatable without a human watching video frame-by-frame | **Reframed**: Number 1 is now (a) exact-count synthetic ground truth (automatable, done) + (b) automatic late-trial tap-count gap on real footage (no manual labels needed) | Manual video labeling isn't feasible inside the build window without Ashraf's own time; the reframed claim is equally rigorous and fully reproducible |
 | Xcode license not yet accepted on this machine | Blocked — needs Ashraf to run `sudo xcodebuild -license accept`. **The iOS app target (camera, SwiftUI, RevenueCat) has never actually been compiled** — everything verified so far is macOS-only TapCore/tapbench, worked around via `DEVELOPER_DIR=/Library/Developer/CommandLineTools`, which has no iOS SDK | None — genuinely needs Ashraf | Requires interactive password |
