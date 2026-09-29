@@ -25,7 +25,7 @@ public enum QualityGate {
             return confidence < jointConfidenceThreshold || !$0.hasFullHand
         }.count
         let missingFraction = Double(missingOrLowConfidence) / Double(samples.count)
-        if missingFraction > 0.10 {
+        if missingFraction > 0.15 {
             return .refused(reason: "Your hand left the frame or wasn't clear enough for \(Int(missingFraction * 100))% of the trial. Try again with your hand steady and well lit.")
         }
 
@@ -38,7 +38,7 @@ public enum QualityGate {
                   let wrist = sample.wrist, let mcp = sample.middleMCP else { return nil }
             return Double(hypot(wrist.x - mcp.x, wrist.y - mcp.y))
         }
-        if let variation = relativeVariation(scales), variation > 0.20 {
+        if let variation = relativeVariation(scales), variation > 0.35 {
             return .refused(reason: "Your hand moved too much toward or away from the camera. Keep it steady, side-on, and the same distance away.")
         }
 

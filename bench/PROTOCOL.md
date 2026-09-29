@@ -39,6 +39,20 @@ Reported on the held-out split only:
 Every video the quality gate refuses is counted and reported, with no
 attempt to force a score out of a trial it flagged as unreliable.
 
+## Quality gate calibration (done once, before the full run)
+The gate's two data-quality thresholds (missing/low-confidence hand fraction,
+and hand-scale drift toward/away from the camera) were written before any
+real footage was seen, using round guesses. Run once against a random
+20-video sample (seed 42, disjoint from nothing — this sample is not reused
+in the reported split) to check they weren't simply wrong for
+handheld/webcam recordings: the original thresholds (10% missing, 20% scale
+drift) refused 50% of that sample, mostly on scale drift, which a clinical
+home recording will naturally have more of than Tapline's own guided
+in-app capture. Loosened once to 15% / 35%, dropping the sample's refusal
+rate to 20% — still a real filter, not "accept everything." **These
+thresholds are now fixed for the full run and for the shipped app; they are
+not touched again after seeing the full-dataset correlation numbers.**
+
 ## Honest expected limitations (stated before running, not after)
 - Camera framing, distance and lighting in HUBU-FIS almost certainly differ
   from Tapline's own guided setup, which may weaken correlations that would

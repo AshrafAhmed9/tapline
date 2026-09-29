@@ -94,13 +94,21 @@ struct TapBench {
                     fixedLastThirdCount: fixedLate
                 )
 
-                if let row = labelsByStem[stem(videoURL.lastPathComponent)] {
+                let videoStem = stem(videoURL.lastPathComponent)
+                if let row = labelsByStem[videoStem] {
                     if let scoreCol, let raw = row[scoreCol], let value = Double(raw) {
                         result.clinicalScore = value
                     }
                     if let groupCol, let raw = row[groupCol] {
                         result.isPD = raw.lowercased().contains(pdValue)
                     }
+                }
+                // HUBU-FIS (and similarly-structured datasets) encode group in
+                // the ID itself (e.g. "CONTROL01_DCHA" vs "ID9992_DCHA")
+                // rather than a separate column. Fall back to that when no
+                // explicit group column was found or matched.
+                if result.isPD == nil, groupCol == nil {
+                    result.isPD = !videoStem.hasPrefix("control") // videoStem is already lowercased by stem()
                 }
                 results.append(result)
             } catch {

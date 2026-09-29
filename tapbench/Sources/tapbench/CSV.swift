@@ -11,7 +11,13 @@ enum CSV {
     }
 
     static func parse(url: URL) throws -> Table {
-        let text = try String(contentsOf: url, encoding: .utf8)
+        let raw = try String(contentsOf: url, encoding: .utf8)
+        // Swift's String is grapheme-cluster-based, and "\r\n" is a SINGLE
+        // Character in Swift — splitting on "\n" alone silently never
+        // matches inside a CRLF file (every real line ends up concatenated
+        // into one). Normalize CRLF and lone CR to LF first.
+        let text = raw.replacingOccurrences(of: "\r\n", with: "\n")
+            .replacingOccurrences(of: "\r", with: "\n")
         var lines = text.split(separator: "\n", omittingEmptySubsequences: true).map(String.init)
         guard !lines.isEmpty else { return Table(header: [], rows: []) }
         let header = splitLine(lines.removeFirst())
