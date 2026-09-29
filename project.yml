@@ -1,0 +1,68 @@
+name: Tapline
+options:
+  bundleIdPrefix: com.ashraf.tapline
+  deploymentTarget:
+    iOS: "26.0"
+    macOS: "15.0"
+  createIntermediateGroups: true
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    DEVELOPMENT_TEAM: ""
+    CODE_SIGN_STYLE: Automatic
+
+packages:
+  TapCore:
+    path: Packages/TapCore
+  RevenueCat:
+    url: https://github.com/RevenueCat/purchases-ios-spm
+    from: "5.0.0"
+
+targets:
+  Tapline:
+    type: application
+    platform: iOS
+    sources:
+      - path: Tapline
+        excludes:
+          - "**/*.md"
+    resources:
+      - path: Tapline/Resources
+    configFiles:
+      Debug: Config/Secrets.xcconfig
+      Release: Config/Secrets.xcconfig
+    dependencies:
+      - package: TapCore
+      - package: RevenueCat
+        product: RevenueCat
+      - package: RevenueCat
+        product: RevenueCatUI
+    info:
+      path: Tapline/Info.plist
+      properties:
+        UILaunchScreen: {}
+        NSCameraUsageDescription: "Tapline measures your finger taps to track Parkinson's symptoms. Video never leaves your iPhone unless you choose to share a clip."
+        NSPhotoLibraryUsageDescription: "Tapline can analyze a tapping video someone else recorded for you."
+        RevenueCatAPIKey: "$(REVENUECAT_API_KEY)"
+        UIRequiredDeviceCapabilities:
+          - arm64
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.ashraf.tapline
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+        TARGETED_DEVICE_FAMILY: "1"
+        SWIFT_EMIT_LOC_STRINGS: YES
+
+  tapbench:
+    type: tool
+    platform: macOS
+    sources:
+      - path: tapbench/Sources/tapbench
+    dependencies:
+      - package: TapCore
+    settings:
+      base:
+        MACOSX_DEPLOYMENT_TARGET: "15.0"

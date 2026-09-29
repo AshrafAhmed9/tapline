@@ -1,0 +1,27 @@
+# Xcode
+build/
+DerivedData/
+*.xcuserstate
+*.xcuserdatad/
+xcuserdata/
+.DS_Store
+
+# XcodeGen-generated project (regenerate with `xcodegen generate`)
+*.xcodeproj
+
+# Secrets — RevenueCat keys never get committed
+*.xcconfig
+!Config/*.template.xcconfig
+
+# Swift Package Manager
+.build/
+.swiftpm/
+
+# The HUBU-FIS dataset (10.8GB) — downloaded by README instructions, never committed
+bench/dataset/
+
+# Local tooling, not part of the public submission
+.claude/
+.codex/
+graphify-out/
+AGENTS.md
