@@ -66,7 +66,17 @@ final class CameraController: NSObject {
         let candidates = device.formats.filter { format in
             format.videoSupportedFrameRateRanges.contains { $0.maxFrameRate >= target }
         }
-        let bestFormat = candidates.max {
+        // Cap resolution: the offline analyzer runs Vision on every frame of
+        // a 600+ frame clip, and a 4K-class front-camera format would make
+        // that take far longer than the trial itself. 1080p is plenty for
+        // finger-tip tracking.
+        let maxPixels = 1920 * 1440
+        let withinBudget = candidates.filter {
+            let d = CMVideoFormatDescriptionGetDimensions($0.formatDescription)
+            return Int(d.width) * Int(d.height) <= maxPixels
+        }
+        let pool = withinBudget.isEmpty ? candidates : withinBudget
+        let bestFormat = pool.max {
             let a = CMVideoFormatDescriptionGetDimensions($0.formatDescription)
             let b = CMVideoFormatDescriptionGetDimensions($1.formatDescription)
             return (a.width * a.height) < (b.width * b.height)

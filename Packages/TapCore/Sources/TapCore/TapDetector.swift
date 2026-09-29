@@ -12,6 +12,13 @@ public struct Tap: Sendable, Equatable {
     /// per-tap "range of motion" — the quantity that shrinks with
     /// bradykinesia.
     public let amplitude: Double
+
+    public init(index: Int, time: Double, openPeakTime: Double, amplitude: Double) {
+        self.index = index
+        self.time = time
+        self.openPeakTime = openPeakTime
+        self.amplitude = amplitude
+    }
 }
 
 /// How the closed/open thresholds are chosen. Two strategies exist so the
@@ -21,7 +28,7 @@ public enum ThresholdStrategy: Sendable {
     /// Recomputes the closed/open band from a trailing window of the
     /// signal, so it tracks the trial's own amplitude as it shrinks. This
     /// is what the app uses.
-    case adaptive(windowSeconds: Double = 2.5, lowerPercentile: Double = 0.25, upperPercentile: Double = 0.75)
+    case adaptive(windowSeconds: Double = 1.2, lowerPercentile: Double = 0.25, upperPercentile: Double = 0.75)
 
     /// Sets the band once, from the first `calibrationSeconds` of the
     /// trial, and never revisits it — the way a simple "measure the first

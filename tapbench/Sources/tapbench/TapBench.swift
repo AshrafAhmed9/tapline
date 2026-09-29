@@ -53,7 +53,7 @@ struct TapBench {
             do {
                 let table = try CSV.parse(url: URL(fileURLWithPath: labelsPath))
                 print("Label columns: \(table.header)")
-                filenameCol = args.value("--filename-col") ?? guessFilenameColumn(table, videoStems: Set(videoFiles.map { stem($0) }))
+                filenameCol = args.value("--filename-col") ?? guessFilenameColumn(table, videoStems: Set(videoFiles.map { stem($0.lastPathComponent) }))
                 scoreCol = args.value("--score-col") ?? guessColumn(table, containing: ["updrs", "score", "rating", "severity"])
                 groupCol = args.value("--group-col") ?? guessColumn(table, containing: ["group", "diagnosis", "label", "class", "condition"])
                 print("Using filename column: \(filenameCol ?? "none found"), score column: \(scoreCol ?? "none found"), group column: \(groupCol ?? "none found")")

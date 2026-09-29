@@ -160,7 +160,7 @@ struct TapMetricsTests {
         // but the underlying tap amplitude is constant. Per-frame
         // normalization would fake a decrement; median normalization
         // should not.
-        let samples: [TapSample] = (0..<60).map { i in
+        let samples: [TapSample] = (0..<72).map { i in
             let t = Double(i) / 30.0
             let scaleWobble = 1.0 + 0.15 * sin(Double(i) * 0.3) // rotation noise
             let tapPhase = (1 - cos(2 * .pi * 1.5 * t)) / 2 // 1.5 Hz taps
@@ -170,7 +170,7 @@ struct TapMetricsTests {
                 thumbTip: CGPoint(x: 0, y: 0),
                 indexTip: CGPoint(x: gap * scaleWobble, y: 0),
                 wrist: CGPoint(x: -10, y: 0),
-                middleMCP: CGPoint(x: -10 + 0.1 * scaleWobble, y: 0),
+                middleMCP: CGPoint(x: -10 + 1.0 * scaleWobble, y: 0),
                 confidence: 0.9
             )
         }

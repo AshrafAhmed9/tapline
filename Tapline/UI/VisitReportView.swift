@@ -14,7 +14,7 @@ struct VisitReportView: View {
     let hand: TrialHand
 
     @Environment(\.dismiss) private var dismiss
-    @State private var renderedImage: Image?
+    @State private var renderedImage: UIImage?
 
     var body: some View {
         NavigationStack {
@@ -32,7 +32,10 @@ struct VisitReportView: View {
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     if let renderedImage {
-                        ShareLink(item: renderedImage, preview: SharePreview("Tapline visit report", image: renderedImage))
+                        ShareLink(
+                            item: renderedImage,
+                            preview: SharePreview("Tapline visit report", image: Image(uiImage: renderedImage))
+                        )
                     }
                 }
             }
@@ -81,8 +84,6 @@ struct VisitReportView: View {
     private func render() {
         let renderer = ImageRenderer(content: reportContent.padding(24).frame(width: 350).background(Color.white))
         renderer.scale = UIScreen.main.scale
-        if let uiImage = renderer.uiImage {
-            renderedImage = Image(uiImage: uiImage)
-        }
+        renderedImage = renderer.uiImage
     }
 }

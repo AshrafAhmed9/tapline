@@ -19,7 +19,11 @@
 	<key>CFBundleVersion</key>
 	<string>1</string>
 	<key>NSCameraUsageDescription</key>
-	<string>First Words watches your hand to teach you sign language. Video never leaves your device.</string>
+	<string>Tapline measures your finger taps to track Parkinson's symptoms. Video never leaves your iPhone unless you choose to share a clip.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Tapline can analyze a tapping video someone else recorded for you.</string>
+	<key>RevenueCatAPIKey</key>
+	<string>$(REVENUECAT_API_KEY)</string>
 	<key>UILaunchScreen</key>
 	<dict/>
 	<key>UIRequiredDeviceCapabilities</key>

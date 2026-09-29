@@ -36,15 +36,15 @@ final class HandPoseDetector {
             do {
                 let observations = try await request.perform(on: pixelBuffer, orientation: orientation)
                 let poses = observations.compactMap { observation -> HandPose? in
-                    guard let points = try? observation.allJoints(),
-                          !points.isEmpty else { return nil }
+                    let points = observation.allJoints()
+                    guard !points.isEmpty else { return nil }
 
-                    var joints: [VNHumanHandPoseObservation.JointName: CGPoint] = [:]
+                    var joints: [HumanHandPoseObservation.JointName: CGPoint] = [:]
                     for jointName in HandPose.allJoints {
                         guard let point = points[jointName], point.confidence >= jointConfidenceThreshold else {
                             continue
                         }
-                        joints[jointName] = point.location
+                        joints[jointName] = point.location.cgPoint
                     }
                     guard !joints.isEmpty else { return nil }
                     return HandPose(

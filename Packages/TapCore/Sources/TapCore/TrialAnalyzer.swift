@@ -79,16 +79,17 @@ public enum TrialAnalyzer {
 
     private static func sample(
         at timestamp: Double,
-        from observation: VNHumanHandPoseObservation?,
+        from observation: HumanHandPoseObservation?,
         confidenceThreshold: Float
     ) -> TapSample {
-        guard let observation, let points = try? observation.allJoints() else {
+        guard let observation else {
             return TapSample(timestamp: timestamp, thumbTip: nil, indexTip: nil, wrist: nil, middleMCP: nil, confidence: nil)
         }
+        let points = observation.allJoints()
 
-        func point(_ joint: VNHumanHandPoseObservation.JointName) -> (CGPoint, Float)? {
+        func point(_ joint: HumanHandPoseObservation.JointName) -> (CGPoint, Float)? {
             guard let p = points[joint], p.confidence >= confidenceThreshold else { return nil }
-            return (p.location, p.confidence)
+            return (p.location.cgPoint, p.confidence)
         }
 
         let thumb = point(.thumbTip)

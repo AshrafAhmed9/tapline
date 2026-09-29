@@ -10,6 +10,11 @@ public struct SignalPoint: Sendable {
     /// rather than dropped, so gaps are visible instead of silently
     /// stitched over.
     public let value: Double?
+
+    public init(timestamp: Double, value: Double?) {
+        self.timestamp = timestamp
+        self.value = value
+    }
 }
 
 /// Turns raw per-frame samples into the normalized signal `TapDetector` and
