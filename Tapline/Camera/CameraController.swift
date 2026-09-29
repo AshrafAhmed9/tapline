@@ -1,4 +1,5 @@
 import AVFoundation
+import CoreMedia
 import UIKit
 
 /// Owns the capture session and hands raw frames to whoever wants them.

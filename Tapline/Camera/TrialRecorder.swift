@@ -1,4 +1,6 @@
-import AVFoundation
+@preconcurrency import AVFoundation
+@preconcurrency import CoreMedia
+@preconcurrency import CoreVideo
 
 /// Writes camera frames straight to an H.264 file as they arrive, so the
 /// exact footage `TapCore.TrialAnalyzer` re-reads afterward is the exact

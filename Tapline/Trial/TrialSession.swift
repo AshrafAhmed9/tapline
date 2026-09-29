@@ -1,5 +1,6 @@
-import AVFoundation
+@preconcurrency import AVFoundation
 @preconcurrency import CoreMedia
+@preconcurrency import CoreVideo
 import TapCore
 import UIKit
 
