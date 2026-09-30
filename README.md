@@ -4,7 +4,7 @@
 
 Built for the [RevenueCat Shipaton 2026](https://revenuecat-shipaton-2026.devpost.com/) — Next Gen Award.
 
-<!-- TODO before submission: screenshot / GIF of the result screen (shrinking tap bars) -->
+<img src="Tapline/Resources/Screenshots/result-screen.png" alt="Tapline result screen showing tap-by-tap width shrinking over a 10-second trial" width="300">
 
 ## Why this exists
 
