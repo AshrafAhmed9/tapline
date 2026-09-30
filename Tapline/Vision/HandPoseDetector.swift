@@ -1,6 +1,7 @@
 import CoreImage
+@preconcurrency import CoreVideo
 import Observation
-import Vision
+@preconcurrency import Vision
 
 /// Runs Vision's hand pose request on camera frames and publishes smoothed results.
 ///

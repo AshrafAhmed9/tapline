@@ -10,7 +10,7 @@ final class HandPoseSmoother {
     /// Lower = smoother but laggier. 0.4 is a reasonable start for a 30fps feed.
     private let alpha: CGFloat = 0.4
 
-    private var previous: [VNChirality: [VNHumanHandPoseObservation.JointName: CGPoint]] = [:]
+    private var previous: [HumanHandPoseObservation.Chirality?: [HumanHandPoseObservation.JointName: CGPoint]] = [:]
 
     func smooth(_ poses: [HandPose]) -> [HandPose] {
         let seenChiralities = Set(poses.map(\.chirality))
@@ -18,7 +18,7 @@ final class HandPoseSmoother {
 
         return poses.map { pose in
             var priorJoints = previous[pose.chirality] ?? [:]
-            var smoothedJoints: [VNHumanHandPoseObservation.JointName: CGPoint] = [:]
+            var smoothedJoints: [HumanHandPoseObservation.JointName: CGPoint] = [:]
 
             for (joint, newPoint) in pose.joints {
                 if let priorPoint = priorJoints[joint] {

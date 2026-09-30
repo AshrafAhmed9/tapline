@@ -12,6 +12,6 @@ final class PreviewLayerHolder {
     func viewPoint(forVisionPoint point: CGPoint) -> CGPoint? {
         guard let layer else { return nil }
         let devicePoint = CGPoint(x: point.x, y: 1 - point.y)
-        return layer.layerPointConverted(fromCaptureDevicePointOfInterest: devicePoint)
+        return layer.layerPointConverted(fromCaptureDevicePoint: devicePoint)
     }
 }

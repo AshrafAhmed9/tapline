@@ -1,15 +1,13 @@
 # What's left (needs Ashraf)
 
 Everything buildable without a device, a paid account, or a password is done and
-committed. This is the exact remaining checklist, in order.
+committed. The iOS app now builds cleanly (`xcodebuild ... generic/platform=iOS` →
+BUILD SUCCEEDED) and `swift test` passes 16/16 for real through Xcode. This is the
+exact remaining checklist, in order.
 
-## 1. Unblock the build (2 minutes)
-```
-sudo xcodebuild -license accept
-```
-Once done, tell Claude — it can then run the real iOS build and `swift test` for
-real (both have only been verified via a macOS-only Command Line Tools workaround
-so far, since this machine's Xcode license was never accepted).
+## 1. Xcode build — done
+License accepted, 6 real build errors found and fixed (Swift 6 concurrency, a
+stale Vision type, a ShareLink/Transferable gap). App compiles clean.
 
 ## 2. RevenueCat dashboard (10 minutes, do this yourself — no API access from here)
 1. Create a RevenueCat account/project if you don't have one.

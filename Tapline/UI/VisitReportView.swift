@@ -1,6 +1,19 @@
 import SwiftUI
 import TapCore
 import UIKit
+import UniformTypeIdentifiers
+
+/// `UIImage` isn't `Transferable` itself; wrap the PNG bytes so `ShareLink`
+/// can hand Messages/Mail/Files an actual file instead of an opaque object.
+private struct SharableReportImage: Transferable {
+    let uiImage: UIImage
+
+    static var transferRepresentation: some TransferRepresentation {
+        DataRepresentation(exportedContentType: .png) { report in
+            report.uiImage.pngData() ?? Data()
+        }
+    }
+}
 
 /// The Plus-gated deliverable: a single page summarizing one trial, made to
 /// be screenshotted or shared before a neurologist visit. Rendered with
@@ -33,7 +46,7 @@ struct VisitReportView: View {
                 ToolbarItem(placement: .confirmationAction) {
                     if let renderedImage {
                         ShareLink(
-                            item: renderedImage,
+                            item: SharableReportImage(uiImage: renderedImage),
                             preview: SharePreview("Tapline visit report", image: Image(uiImage: renderedImage))
                         )
                     }
