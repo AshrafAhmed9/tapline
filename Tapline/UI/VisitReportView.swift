@@ -64,6 +64,9 @@ struct VisitReportView: View {
                 .font(.footnote)
                 .foregroundStyle(.secondary)
 
+            Text(summarySentence)
+                .font(.subheadline.weight(.semibold))
+
             Divider()
 
             Group {
@@ -82,6 +85,16 @@ struct VisitReportView: View {
                 .foregroundStyle(.secondary)
         }
         .foregroundStyle(.black)
+    }
+
+    private var summarySentence: String {
+        if metrics.decrementPercent > 15 {
+            "Taps got \(Int(metrics.decrementPercent))% smaller by the end of the trial."
+        } else if metrics.decrementPercent > 5 {
+            "A slight fade — taps got a little smaller over the trial."
+        } else {
+            "Tapping stayed steady from start to finish."
+        }
     }
 
     private func reportRow(_ label: String, _ value: String) -> some View {

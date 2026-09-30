@@ -38,23 +38,27 @@ struct TrialFlowView: View {
                 }
                 .background(Color(.systemBackground))
 
-            case .settingUp(let hand):
+            case .settingUp, .countdown, .recording:
+                // One stable CameraStageView across all three phases — it
+                // must NOT be recreated per phase, or the underlying
+                // AVCaptureVideoPreviewLayer gets torn down and reconnected
+                // on every transition, which is what caused the lag and the
+                // black screen during the countdown.
                 CameraStageView(session: session) {
-                    SetupOverlay(
-                        hand: hand,
-                        onReady: { session.beginTrial(hand: hand) },
-                        onCancel: { session.cancelAndReturnToPicker() }
-                    )
-                }
-
-            case .countdown(_, let secondsLeft):
-                CameraStageView(session: session) {
-                    BigNumberOverlay(text: "\(secondsLeft)", subtitle: "Get ready")
-                }
-
-            case .recording(_, let secondsLeft):
-                CameraStageView(session: session) {
-                    BigNumberOverlay(text: "\(secondsLeft)", subtitle: "Tap as wide and as fast as you can", tint: .red)
+                    switch session.phase {
+                    case .settingUp(let hand):
+                        SetupOverlay(
+                            hand: hand,
+                            onReady: { session.beginTrial(hand: hand) },
+                            onCancel: { session.cancelAndReturnToPicker() }
+                        )
+                    case .countdown(_, let secondsLeft):
+                        BigNumberOverlay(text: "\(secondsLeft)", subtitle: "Get ready")
+                    case .recording(_, let secondsLeft):
+                        BigNumberOverlay(text: "\(secondsLeft)", subtitle: "Tap as wide and as fast as you can", tint: .red)
+                    default:
+                        EmptyView()
+                    }
                 }
 
             case .analyzing:
@@ -109,7 +113,7 @@ private struct SetupOverlay: View {
             VStack(spacing: 16) {
                 Text("Testing your \(hand.label.lowercased())")
                     .font(.headline)
-                Text("Center your hand, side-on to the camera, with your thumb and index finger visible.")
+                Text("Prop your phone up. Don't touch the screen — hold your hand up and tap your thumb and index finger together in the air, as wide and fast as you can.")
                     .font(.subheadline)
                     .multilineTextAlignment(.center)
                     .foregroundStyle(.secondary)

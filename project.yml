@@ -8,8 +8,24 @@ options:
 settings:
   base:
     SWIFT_VERSION: "6.0"
-    DEVELOPMENT_TEAM: ""
+    DEVELOPMENT_TEAM: "6Q7Y8D32LF"
     CODE_SIGN_STYLE: Automatic
+
+schemes:
+  Tapline:
+    build:
+      targets:
+        Tapline: all
+    run:
+      config: Debug
+    test:
+      config: Debug
+    profile:
+      config: Release
+    analyze:
+      config: Debug
+    archive:
+      config: Release
 
 packages:
   TapCore:

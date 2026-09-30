@@ -57,6 +57,18 @@ final class TrialSession {
     }
 
     private func setUpCamera() async {
+        // `.task` on the owning view cancels and re-runs `start()` every time
+        // the Test tab is left and re-entered (switching to History and
+        // back). Re-running `configure()` on an already-configured session
+        // tries to add the same input/output twice, which AVFoundation
+        // refuses — that's the "operation couldn't be completed" error.
+        // Skip straight to resuming instead of reconfiguring.
+        guard cameraController.session.inputs.isEmpty else {
+            cameraController.start()
+            phase = .pickingHand
+            return
+        }
+
         cameraController.onFrame = { [weak self] sampleBuffer in
             guard let self else { return }
             self.frameCounter += 1

@@ -20,6 +20,11 @@ xcuserdata/
 # The HUBU-FIS dataset (10.8GB) — downloaded by README instructions, never committed
 bench/dataset/
 
+# Raw/exported demo video — hosted on YouTube/Vimeo per submission rules, not committed
+*.MP4
+*.mp4
+!Tapline/**/*.mp4
+
 # Local tooling, not part of the public submission
 .claude/
 .codex/

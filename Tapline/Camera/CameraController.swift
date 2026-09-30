@@ -9,6 +9,8 @@ final class CameraController: NSObject {
 
     private let videoQueue = DispatchQueue(label: "com.tapline.camera.video")
     private let videoOutput = AVCaptureVideoDataOutput()
+    private var rotationCoordinator: AVCaptureDevice.RotationCoordinator?
+    private var rotationObservation: NSKeyValueObservation?
 
     /// Called on `videoQueue` for every frame. Keep this fast.
     var onFrame: ((CMSampleBuffer) -> Void)?
@@ -47,12 +49,20 @@ final class CameraController: NSObject {
         guard session.canAddOutput(videoOutput) else { throw SetupError.cannotAddOutput }
         session.addOutput(videoOutput)
 
-        // Front camera feed is mirrored by default; un-mirror so "raise your right
-        // hand" in the mirror matches what the model and the user both expect.
+        // Hand-picking a rotation angle (90 vs 270) is exactly the trap that
+        // caused the upside-down skeleton: the correct value depends on the
+        // specific camera and device orientation, not just "front vs back."
+        // RotationCoordinator computes the actual correct angle instead of
+        // guessing degrees by hand.
+        let coordinator = AVCaptureDevice.RotationCoordinator(device: device, previewLayer: nil)
+        rotationCoordinator = coordinator
         if let connection = videoOutput.connection(with: .video) {
-            connection.videoRotationAngle = 90
+            connection.videoRotationAngle = coordinator.videoRotationAngleForHorizonLevelCapture
             if connection.isVideoMirroringSupported {
                 connection.isVideoMirrored = true
+            }
+            rotationObservation = coordinator.observe(\.videoRotationAngleForHorizonLevelCapture) { [weak connection] coordinator, _ in
+                connection?.videoRotationAngle = coordinator.videoRotationAngleForHorizonLevelCapture
             }
         }
     }

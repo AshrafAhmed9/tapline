@@ -1,0 +1,61 @@
+1
+00:00:00,000 --> 00:00:07,000
+Parkinson's medication timing is set from a
+ten-second finger-tapping test, scored by eye,
+
+2
+00:00:07,000 --> 00:00:14,000
+once every few months. Five movement specialists
+only agree with each other 74% of the time.
+
+3
+00:00:14,000 --> 00:00:22,000
+Tapline runs that exact test on an iPhone,
+entirely on-device. Prop your phone up, tap
+
+4
+00:00:22,000 --> 00:00:31,000
+for ten seconds. Apple's Vision framework tracks
+your thumb and index finger, frame by frame
+
+5
+00:00:31,000 --> 00:00:40,000
+and Tapline measures what a clinician watches for:
+how many taps, how fast, and how much smaller
+
+6
+00:00:40,000 --> 00:00:48,000
+they get by the end.
+
+7
+00:00:48,000 --> 00:00:58,000
+We didn't just build it, we checked it, on 234
+real, clinician-scored patient videos.
+
+8
+00:00:58,000 --> 00:01:10,000
+Where taps start shrinking, our adaptive detector
+catches 8 taps on average. A fixed threshold catches 2.
+
+9
+00:01:10,000 --> 00:01:20,000
+Adding amplitude and decrement to tap rate alone
+improves the AUC from 0.58 to 0.68.
+
+10
+00:01:20,000 --> 00:01:28,000
+This is Tapline Plus: a one-tap visit report and
+history for a real neurologist visit.
+
+11
+00:01:28,000 --> 00:01:35,000
+Tests stay free, forever. This is what's actually gated.
+
+12
+00:01:35,000 --> 00:01:43,000
+And when Tapline can't measure reliably, it says
+so, instead of guessing.
+
+13
+00:01:43,000 --> 00:01:50,000
+Not a diagnosis. On-device. Open source.
